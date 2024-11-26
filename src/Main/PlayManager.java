@@ -38,12 +38,19 @@ public class PlayManager {
     Mino nextMino;
     final int NEXTMINO_X;
     final int NEXTMINO_Y;
+
     //rozszerzalna tablica blokow, z ktorych kazdy ma: wspolrzedna x, wspolrzedna y, kolor i rozmiar
     public static ArrayList<Block> staticBlocks = new ArrayList<>();
     boolean gameOver = false;
 
+    int level = 1;
+    int lines = 0;
+    int score = 0;
+    int singleLineScore;
+
+
     //inne
-    public static int dropInterval = 30;    //jedno mino spada o jedna dlugosc bloku co 60 klatek, czyli jedna sekunda
+    public static int dropInterval = 40;    //jedno mino spada o jedna dlugosc bloku co 30 klatek, czyli pol sekundy
 
     public PlayManager() {
         left_x = GamePanel.WIDTH/2 - WIDTH/2;
@@ -107,6 +114,12 @@ public class PlayManager {
         }
         else{
             currentMino.update();
+            //***************************
+            if(currentMino.bottomPressed){
+                score++;
+                currentMino.bottomPressed = false;
+            }
+            //***************************
         }
     }
 
@@ -115,6 +128,7 @@ public class PlayManager {
         int x = left_x;
         int y = top_y;
         int blockCount = 0;
+        int linesCount = 0;
 
         while(x < right_x && y < bottom_y){
 
@@ -139,6 +153,21 @@ public class PlayManager {
                             staticBlocks.remove(i);
                         }
                     }
+                    lines++;
+                    //to liczy wszystkie linie w calej grze
+                    linesCount++;
+                    //to dobija liczy ile lini podczas jednego usuwania
+
+                    if(lines % 8 == 0 && dropInterval > 1){
+                        level++;
+                        if(dropInterval>=7){
+                            dropInterval -=10;
+                        }
+                        else{
+                            dropInterval--;
+                        }
+                    }
+
                     //rzad zostal usuniety, wiec teraz y kazdego z pozostalych blokow trzeba zwiekszyc o Block.SIZE;
                     for(int i = 0; i < staticBlocks.size(); i++){
                         if(staticBlocks.get(i).y < y){  //tego if'a trzeba dodac, zeby nie przesuwac najnizszego
@@ -152,6 +181,12 @@ public class PlayManager {
                 x = left_x;
                 y += Block.SIZE;
             }
+        }
+
+        //dodawanie wyniku
+        if(linesCount > 0){
+            singleLineScore = 10 * level;
+            score += singleLineScore * linesCount;
         }
     }
 
@@ -170,7 +205,14 @@ public class PlayManager {
         //tworzenie napisu "NEXT"
         g2.setFont(new Font("Arial", Font.PLAIN, 30));
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //nwm do czego jest ta linijka
-        g2.drawString("NEXT: ", x+60, y+60);
+        g2.drawString("NEXT: ", x+60, y+40);
+
+        y = top_y;
+        g2.drawRect(x,y,250,250);
+        x +=25;
+        g2.drawString("LEVEL: " + level, x, y+60);
+        g2.drawString("LINES: " + lines, x, y+120);
+        g2.drawString("SCORE: " + score, x, y+180);
 
         //narysuj aktualne tetromino
         if(currentMino != null){

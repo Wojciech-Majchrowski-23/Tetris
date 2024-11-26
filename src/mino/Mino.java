@@ -14,6 +14,7 @@ public class Mino {
     int autoDropCounter = 0;
     public int direction = 1;
     boolean leftcollision, rightcollision, bottomcollision;
+    public boolean bottomPressed = false;
     public boolean active = true;
     public boolean deactivating;
     int deactivateCounter = 0;
@@ -157,6 +158,9 @@ public class Mino {
 
         if(KeyHandler.downPressed){
             if(!bottomcollision){
+                //**************
+                bottomPressed = true;
+                //**************
                 b[0].y += Block.SIZE;
                 b[1].y += Block.SIZE;
                 b[2].y += Block.SIZE;
@@ -205,6 +209,7 @@ public class Mino {
 
 
     }
+
     private void deactivating(){
 
         deactivateCounter++;

@@ -20,4 +20,8 @@ public class Main {
     }
 }
 
-// skonczyles na 1:15:46 i teraz bedziesz dodawac wynik i poziom
+//fragmenty kodu wydzielone "//*********************" sa moimi
+
+//stworzyc wprowadzanie nazwy uzytkownika
+//stworzyc plik tekstowy z najwyzszymi wynikami
+//dorobic ladny napis "TETRIS" z boku na gorze
