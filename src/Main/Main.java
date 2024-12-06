@@ -1,6 +1,7 @@
 package Main;
 
 import javax.swing.JFrame;      //biblioteka do okien
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
@@ -20,8 +21,5 @@ public class Main {
     }
 }
 
-//fragmenty kodu wydzielone "//*********************" sa moimi
-
-//stworzyc wprowadzanie nazwy uzytkownika
-//stworzyc plik tekstowy z najwyzszymi wynikami
 //dorobic ladny napis "TETRIS" z boku na gorze
+//jak skasujesz 4 linijki na raz to dostajesz premie punktowa

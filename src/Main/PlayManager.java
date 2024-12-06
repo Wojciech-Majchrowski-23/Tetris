@@ -3,6 +3,7 @@ package Main;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import mino.Block;
 import mino.Mino;
@@ -48,11 +49,19 @@ public class PlayManager {
     int score = 0;
     int singleLineScore;
 
+    HighscoreTable hst = new HighscoreTable();
+    String username;
 
     //inne
     public static int dropInterval = 40;    //jedno mino spada o jedna dlugosc bloku co 30 klatek, czyli pol sekundy
 
     public PlayManager() {
+
+        while(username == null){
+            Scanner sc = new Scanner(System.in);
+            username = sc.nextLine();
+        }
+
         left_x = GamePanel.WIDTH/2 - WIDTH/2;
         right_x = left_x + WIDTH;
         top_y= 50;
@@ -100,6 +109,8 @@ public class PlayManager {
 
             if(currentMino.b[0].x == MINO_START_X && currentMino.b[0].y == MINO_START_Y){
                 gameOver = true;
+
+                hst.checkAndUpdateHighscoreTable(username, score);
             }
 
             currentMino.deactivating = false;
@@ -161,7 +172,7 @@ public class PlayManager {
                     if(lines % 8 == 0 && dropInterval > 1){
                         level++;
                         if(dropInterval>=7){
-                            dropInterval -=10;
+                            dropInterval -=5;
                         }
                         else{
                             dropInterval--;
@@ -204,7 +215,7 @@ public class PlayManager {
 
         //tworzenie napisu "NEXT"
         g2.setFont(new Font("Arial", Font.PLAIN, 30));
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //nwm do czego jest ta linijka
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.drawString("NEXT: ", x+60, y+40);
 
         y = top_y;
@@ -213,6 +224,27 @@ public class PlayManager {
         g2.drawString("LEVEL: " + level, x, y+60);
         g2.drawString("LINES: " + lines, x, y+120);
         g2.drawString("SCORE: " + score, x, y+180);
+
+        //rysowanie tablicy wynikow z napisem highscores
+        x = left_x - 350;
+        y = top_y;
+        g2.drawRect(x,y,250,420);
+        g2.setFont(new Font("Arial", Font.PLAIN, 30));
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.drawString("HIGHSCORES: ", x+10, y-10);
+
+        //wypisywanie najwyzszych wynikow
+        x = left_x - 350 + 10;
+        y = top_y + 30;
+        int space = 40;
+
+        g2.setFont(new Font("Arial", Font.PLAIN, 25));
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        for(int i = 0; i < hst.pairs.length; i++){
+            g2.drawString(hst.pairs[i].getKey() + "   " + hst.pairs[i].getValue() + " pts", x, y);
+            y+=space;
+        }
 
         //narysuj aktualne tetromino
         if(currentMino != null){
